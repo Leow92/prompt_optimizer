@@ -1,4 +1,5 @@
 # 🧠 leo-prompt-optimizer
+[![PyPI version](https://badge.fury.io/py/leo-prompt-optimizer.svg)](https://pypi.org/project/leo-prompt-optimizer/)
 
 **leo-prompt-optimizer** is a Python library that helps developers **optimize raw LLM prompts** into structured, high-performance instructions using real LLM intelligence.
 

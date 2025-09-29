@@ -6,6 +6,7 @@ setup(
     packages=find_packages(),     # 👌 Ça détecte bien 'leo_prompt_optimizer'
     install_requires=[
         'groq',
+        'openai',
         'python-dotenv'
     ],
     description='A Python library to optimize prompts from drafts and LLM inputs/outputs.',
@@ -20,4 +21,9 @@ setup(
         'Operating System :: OS Independent',
     ],
     python_requires='>=3.8',
+    project_urls={
+        "Source": "https://github.com/Leow92/prompt_optimizer",
+        "Documentation": "https://github.com/Leow92/prompt_optimizer#readme",
+    },
+    include_package_data=True,
 )
