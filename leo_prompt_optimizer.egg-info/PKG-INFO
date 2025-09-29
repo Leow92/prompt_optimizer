@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: leo-prompt-optimizer
-Version: 0.1.8
+Version: 0.1.9
 Summary: A Python library to optimize prompt drafts using LLMs
 Author: Léonard Baesen-Wagner
 Author-email: Leonard Baesen-Wagner <lr.baesen@gmail.com>
@@ -13,6 +13,7 @@ Dynamic: author
 Dynamic: requires-python
 
 # 🧠 leo-prompt-optimizer
+[![PyPI version](https://badge.fury.io/py/leo-prompt-optimizer.svg)](https://pypi.org/project/leo-prompt-optimizer/)
 
 **leo-prompt-optimizer** is a Python library that helps developers **optimize raw LLM prompts** into structured, high-performance instructions using real LLM intelligence.
 
