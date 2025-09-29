@@ -1,0 +1,14 @@
+[project]
+name = "leo-prompt-optimizer"
+version = "0.1.8"
+description = "A Python library to optimize prompt drafts using LLMs"
+readme = "README.md"
+authors = [
+  { name="Leonard Baesen-Wagner", email="lr.baesen@gmail.com" }
+]
+license = { text = "MIT" }
+dependencies = [
+  "groq",
+  "python-dotenv"
+]
+requires-python = ">=3.8"

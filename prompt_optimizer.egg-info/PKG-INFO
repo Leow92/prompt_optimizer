@@ -1,0 +1,12 @@
+Metadata-Version: 2.4
+Name: prompt-optimizer
+Version: 0.1.0
+Summary: A Python library to optimize prompt drafts using LLMs
+Author: Léonard Baesen-Wagner
+Author-email: Leonard Baesen-Wagner <lr.baesen@gmail.com>
+License: MIT
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: groq
+Requires-Dist: python-dotenv
+Dynamic: author
