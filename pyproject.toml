@@ -1,6 +1,6 @@
 [project]
 name = "leo-prompt-optimizer"
-version = "0.2.2"
+version = "0.2.3"
 description = "A Python library to optimize prompt drafts using LLMs"
 readme = "README.md"
 authors = [

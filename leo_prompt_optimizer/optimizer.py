@@ -17,7 +17,7 @@ def load_system_prompt(template_name):
     template = env.get_template(template_name)
     return template.render()
 
-SYSTEM_PROMPT_V01 = load_system_prompt('system_prompt_v0.1.j2')
+#SYSTEM_PROMPT_V01 = load_system_prompt('system_prompt_v0.1.j2')
 SYSTEM_PROMPT_V02 = load_system_prompt('system_prompt_v0.2.j2')
 
 # 🔐 Optional key setup
