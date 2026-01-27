@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='leo-prompt-optimizer',  # 🔧 Nom visible sur PyPI
-    version='0.2.1',              # 🔼 Mets à jour à chaque nouvelle publication
+    version='0.2.2',              # 🔼 Mets à jour à chaque nouvelle publication
     packages=find_packages(),     # 👌 Ça détecte bien 'leo_prompt_optimizer'
     install_requires=[
         'groq',

@@ -18,7 +18,6 @@ set_client(provider="groq")
 
 # Example draft prompt
 draft = """
-
 """
 
 context = """
@@ -31,7 +30,7 @@ llm_output = None
 # Optimize
 optimized = optimize_prompt(
     prompt_draft=draft,
-    top_instruction=context
+    # top_instruction=context
 )
 
 print("\n✅ --- Optimized Prompt ---\n")

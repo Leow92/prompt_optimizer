@@ -1,15 +1,3 @@
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-from groq import Groq
-from openai import OpenAI
-
-_groq_client = None
-_openai_client_initialized = False
-
-SYSTEM_PROMPT = """
 <system-prompt name="Prompt Optimizer">
 
   <role>
@@ -105,6 +93,11 @@ Your task is to [Clearly state the OVERALL specific task].
   <output-format>
 [Desired response format (JSON, bullet points, structured summary, etc.)]
   </output-format>
+
+  
+  <user-input>
+[User-provided content here: [PLACEHOLDER] or {variable}]
+  </user-input>
 ```
 </optimized-prompt-structure>
 
@@ -113,85 +106,3 @@ Your task is to [Clearly state the OVERALL specific task].
   </final-note>
 
 </system-prompt>
-"""
-
-_client = None
-
-def set_groq_api_key(key: str):
-    os.environ["GROQ_API_KEY"] = key
-
-def set_openai_api_key(key: str):
-    os.environ["OPENAI_API_KEY"] = key
-
-def _get_groq_client():
-    global _groq_client
-    if _groq_client is not None:
-        return _groq_client
-
-    api_key = os.getenv("GROQ_API_KEY")
-    if not api_key:
-        raise RuntimeError("❌ Missing GROQ_API_KEY. Use .env or set_groq_api_key().")
-
-    _groq_client = Groq(api_key=api_key)
-    return _groq_client
-
-def _get_openai_client(base_url: str = None) -> OpenAI:
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        raise ValueError("❌ Missing OPENAI_API_KEY in environment or config.")
-
-    openai_client = OpenAI(
-        api_key=api_key,
-        base_url=base_url  # 👈 ça peut être None ou une URL custom
-    )
-
-    return openai_client
-
-def optimize_prompt(
-    prompt_draft: str,
-    user_input: str = None,
-    llm_output: str = None,
-    provider: str = "groq", # not necessary
-    model: str = None,  # 👈 nouvel argument facultatif
-    base_url: str = None # not necessary
-) -> str:
-    """
-    Optimizes a prompt using either Groq (default) or OpenAI.
-
-    Args:
-        prompt_draft: str – the initial prompt to optimize
-        user_input: str – optional user input (context)
-        llm_output: str – optional LLM output to learn from
-        provider: str – "groq" or "openai"
-        model: str – optional model name to override default (e.g., "gpt-3.5-turbo" or "mixtral-8x7b-32768")
-    """
-
-    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
-    messages.append({"role": "user", "content": f"Prompt draft:\n{prompt_draft}"})
-
-    if user_input:
-        messages.append({"role": "user", "content": f"User input:\n{user_input}"})
-
-    if llm_output:
-        messages.append({"role": "user", "content": f"LLM output:\n{llm_output}"})
-
-    if provider == "groq":
-        client = _get_groq_client()
-        model_name = model or "openai/gpt-oss-20b"  # 👈 modèle par défaut Groq
-        response = client.chat.completions.create(
-            model=model_name,
-            messages=messages
-        )
-        return response.choices[0].message.content
-
-    elif provider == "openai":
-        client = _get_openai_client(base_url)
-        model_name = model or "gpt-oss-120b"  # 👈 modèle par défaut OpenAI
-        response = client.chat.completions.create(
-            model=model_name,
-            messages=messages
-        )
-        return response.choices[0].message.content
-
-    else:
-        raise ValueError(f"❌ Unsupported provider: '{provider}'. Use 'groq' or 'openai'.")
