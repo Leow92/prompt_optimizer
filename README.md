@@ -73,7 +73,7 @@ from leo_prompt_optimizer import set_client
 set_client(provider="groq")
 
 # For OpenAI (with optional custom base URL)
-set_client(provider="openai", base_url="https://openrouter.ai/v1")
+set_client(provider="openai", base_url="https://openrouter.ai/api/v1")
 ```
 
 ---
