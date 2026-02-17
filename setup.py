@@ -1,3 +1,5 @@
+"""Setup script for the leo-prompt-optimizer package, defining metadata and dependencies for distribution on PyPI."""
+
 from setuptools import find_packages, setup
 
 setup(
