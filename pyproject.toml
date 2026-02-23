@@ -1,14 +1,40 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "leo-prompt-optimizer"
-version = "0.2.4"
+version = "1.0.2"
 description = "A Python library to optimize prompt drafts using LLMs"
 readme = "README.md"
-authors = [
-  { name="Leonard Baesen-Wagner", email="lr.baesen@gmail.com" }
-]
+requires-python = ">=3.8"
 license = { text = "MIT" }
+
+# Useful for PyPI categorization
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
 dependencies = [
   "groq",
-  "python-dotenv"
+  "openai",
+  "anthropic",
+  "google-genai",
+  "python-dotenv",
+  "jinja2",
+  "typer",
+  "rich",
+  "tiktoken"
 ]
-requires-python = ">=3.8"
+
+[project.urls]
+Homepage = "https://github.com/Leow92/prompt_optimizer"
+
+[project.scripts]
+leo-prompt = "leo_prompt_optimizer.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["."]

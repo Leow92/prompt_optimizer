@@ -1,7 +1,21 @@
+# Credentials
 .env
+
+# Python (standard ignores)
 __pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Distribution / Packaging
 build/
 dist/
+local_test/
 *.egg-info/
 *.egg/
-archive
+
+# Project specific (Root level)
+cli_test/
+archive/
+test.py
+prompts/
