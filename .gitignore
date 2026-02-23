@@ -18,4 +18,4 @@ local_test/
 cli_test/
 archive/
 test.py
-prompts/
+assets/

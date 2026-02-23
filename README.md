@@ -23,7 +23,6 @@ Stop "vibes-based" prompting. Use a data-driven approach to optimize, evaluate, 
 
 ```bash
 pip install leo-prompt-optimizer
-
 ```
 
 ---
@@ -37,8 +36,10 @@ leo-prompt --prompt-file draft.txt \
            --provider-name groq \
            --tests tests.json \
            --model your-model-id
-
 ```
+
+![CLI Result](assets/cli-example.png)
+
 
 ### What happens under the hood?
 
@@ -55,23 +56,30 @@ Perfect for integrating prompt optimization into your CI/CD pipelines or interna
 ### 1. Initialize Provider
 
 ```python
-from leo_prompt_optimizer import GroqProvider, LeoOptimizer, PromptEvaluator
+from leo_prompt_optimizer import GroqProvider, LeoOptimizer, PromptEvaluator, BatchEvaluator
 
 # Automatically loads API keys from .env (GROQ_API_KEY, OPENAI_API_KEY, etc.)
 provider = GroqProvider()
 optimizer = LeoOptimizer(provider, default_model="your-optimizer-model-id")
-
 ```
 
-### 2. Optimize & Evaluate
+### 2. Optimize a Prompt
 
 ```python
 draft = "Write a code review for this python function."
 
-# 🚀 Step 1: Optimize
+# 🚀 Optimize
 optimized = optimizer.optimize(draft)
+print(optimized)
+```
 
-# 📊 Step 2: Evaluate
+### 3. Evaluate on a Single Test Input
+
+```python
+from rich.console import Console
+
+console = Console()
+
 evaluator = PromptEvaluator(provider, optimizer.env, judge_model="your-judge-model-id")
 result = evaluator.evaluate(
     original_prompt=draft,
@@ -79,9 +87,42 @@ result = evaluator.evaluate(
     test_input="def add(a, b): return a + b"
 )
 
-# The result object prints a beautiful ASCII dashboard automatically
-print(result)
+# Print the evaluation results in a clean and clear table
+console.print(result.to_rich_table())
+```
 
+![Single Evaluation Result](assets/single-evaluation-example.png)
+
+
+### 4. Evaluate on a Batch of Test Inputs
+
+```python
+test_cases = [
+    "def fib(n): return n if n <= 1 else fib(n-1) + fib(n-2)",
+    "def fib(n): a, b = 0, 1\n for _ in range(n): a, b = b, a + b\n return a"
+]
+
+batch_evaluator = BatchEvaluator(provider, optimizer.env, judge_model="your-judge-model-id")
+
+batch_result = batch_evaluator.run_batch(
+    original_prompt=draft,
+    optimized_prompt=optimized,
+    test_cases=test_cases
+)
+
+# Print the batch evaluation results in a clean and clear table
+console.print(batch_result.to_rich_table())
+```
+
+![Batch Evaluation Result](assets/batch-evaluation-example.png)
+
+
+Example `tests.json` format for the CLI:
+```json
+[
+  "def fib(n): return n if n <= 1 else fib(n-1) + fib(n-2)",
+  "def fib(n): a, b = 0, 1\n for _ in range(n): a, b = b, a + b\n return a"
+]
 ```
 
 ---
@@ -96,6 +137,8 @@ The library provides objective scores to replace subjective testing:
 | **Token Efficiency** | Percentage of tokens saved (or added) for the structural improvement. |
 | **Schema Adherence** | Pass/Fail check for structured outputs (JSON/Markdown). |
 | **Hallucination Risk** | Detects if the model is fabricating facts not present in the input. |
+| **Hallucination Accuracy** | Percentage of runs that were hallucination-free (e.g. 99.0% for 1 incident in 100 runs). |
+| **Total Runs** | Number of test cases evaluated, giving context to all other metrics. |
 
 ---
 
@@ -122,6 +165,4 @@ Your raw drafts are transformed into high-signal instructions:
 2. Check for missing parameterized queries...
 </instructions>
 <output-format>Return a JSON object with 'severity' and 'fix'.</output-format>
-
 ```
-

@@ -16,9 +16,31 @@ class EvaluationResult:
             f"\n{'='*20} EVALUATION RESULT {'='*20}\n"
             f"⭐ Score: {self.data.get('g_eval_score')}/5 | ✅ Schema: {self.data.get('schema_adherence')}\n"
             f"📉 Tokens: {m.get('token_efficiency_pct')}% reduction\n"
-            f"📝 Reasoning: {self.data.get('reasoning')[:100]}...\n"
+            f"📝 Reasoning: {self.data.get('reasoning')}\n"
             f"{'='*57}"
         )
+
+    def to_rich_table(self, title="Evaluation Result") -> Table:
+        """Helper for the CLI to get a beautiful Rich Table"""
+        table = Table(title=title, show_header=True, header_style="bold magenta")
+        table.add_column("Metric", style="cyan")
+        table.add_column("Value", style="bold white")
+        table.add_column("Status", justify="center")
+
+        d = self.data
+        m = d.get("metrics", {})
+        eff = m.get("token_efficiency_pct", 0)
+        schema = d.get("schema_adherence", "")
+        halluc = d.get("hallucination_risk", "")
+
+        table.add_row("G-Eval Score", f"{d.get('g_eval_score')}/5", "💎")
+        table.add_row("Schema Adherence", schema, "✅" if schema == "Pass" else "❌")
+        table.add_row("Token Efficiency", f"{eff}%", "✅" if eff > 0 else "⚠️")
+        table.add_row("Original Tokens", str(m.get("original_tokens")), "")
+        table.add_row("Optimized Tokens", str(m.get("optimized_tokens")), "")
+        table.add_row("Hallucination Risk", halluc, "✅" if halluc != "High" else "⚠️")
+        table.add_row("Reasoning", d.get("reasoning", ""), "📝")
+        return table
 
 class BatchResult:
     def __init__(self, summary: Dict):
@@ -27,7 +49,12 @@ class BatchResult:
     def __str__(self):
         """Standard Python print() output (Plain Text/ASCII)"""
         s = self.summary
-        return f"Batch: {s['avg_g_eval']}/5 Score | {s['token_reduction_pct']}% Efficiency"
+        return (
+            f"Batch ({s['total_runs']} runs): {s['avg_g_eval']}/5 Score | "
+            f"{s['token_reduction_pct']}% Efficiency | "
+            f"Hallucinations: {s['hallucination_incidents']}/{s['total_runs']} "
+            f"({s['hallucination_accuracy']:.1f}% clean)"
+        )
 
     def to_rich_table(self, title="Optimization Performance Report") -> Table:
         """Helper for the CLI to get a beautiful Rich Table"""
@@ -38,10 +65,13 @@ class BatchResult:
 
         s = self.summary
         eff = s['token_reduction_pct']
+        halluc_acc = s['hallucination_accuracy']
+        table.add_row("Total Runs", str(s['total_runs']), "🔢")
         table.add_row("Token Efficiency", f"{eff}%", "✅" if eff > 0 else "⚠️")
         table.add_row("Avg G-Eval (1-5)", f"{s['avg_g_eval']:.2f}", "💎")
         table.add_row("Schema Pass Rate", f"{s['schema_pass_rate']:.1f}%", "✅")
-        table.add_row("Hallucinations", str(s['hallucination_incidents']), "🛡️")
+        table.add_row("Hallucinations", f"{s['hallucination_incidents']}/{s['total_runs']}", "🛡️")
+        table.add_row("Hallucination Accuracy", f"{halluc_acc:.1f}%", "✅" if halluc_acc >= 90 else "⚠️")
         return table
 
 class PromptEvaluator:
@@ -96,7 +126,7 @@ class PromptEvaluator:
         }
         
         return EvaluationResult(verdict)
-    
+
 class BatchEvaluator:
     def __init__(self, provider, jinja_env, judge_model):
         self.provider = provider
@@ -146,10 +176,12 @@ class BatchEvaluator:
 
         # 3. Aggregate Summary
         summary = {
+            "total_runs": len(results),
             "token_reduction_pct": round(efficiency_gain, 2),
             "avg_g_eval": sum(r['g_eval_score'] for r in results) / len(results),
             "schema_pass_rate": (sum(1 for r in results if r['schema_adherence'] == "Pass") / len(results)) * 100,
             "hallucination_incidents": sum(1 for r in results if r['hallucination_risk'] == "High"),
+            "hallucination_accuracy": (1 - sum(1 for r in results if r['hallucination_risk'] == "High") / len(results)) * 100,
             "individual_runs": results
         }
         return BatchResult(summary)
