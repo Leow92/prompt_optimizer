@@ -6,7 +6,7 @@
 
 **leo-prompt-optimizer** is a production-grade library and CLI tool that transforms raw prompt drafts into structured, high-performance instructions using a 9-step engineering framework.
 
-Stop "vibes-based" prompting. Use a data-driven approach to optimize, evaluate, and benchmark your prompts across **OpenAI, Groq, Anthropic, and Gemini**.
+Stop "vibes-based" prompting. Use a data-driven approach to optimize, evaluate, and benchmark your prompts across **OpenAI, Groq, Anthropic, Gemini, and Mistral**.
 
 ---
 
@@ -71,7 +71,7 @@ Perfect for integrating prompt optimization into your CI/CD pipelines or interna
 from leo_prompt_optimizer import GeminiProvider, AnthropicProvider, OpenAIProvider, MistralProvider, GroqProvider, LeoOptimizer, PromptEvaluator, BatchEvaluator
 
 # Automatically loads API keys from .env (GROQ_API_KEY, OPENAI_API_KEY, etc.)
-provider = GroqProvider() # or another provider
+provider = GroqProvider() # or another provider, you can specify your base_url is you have one as an argument
 optimizer = LeoOptimizer(provider, default_model="your-optimizer-model-id")
 ```
 
@@ -80,7 +80,7 @@ optimizer = LeoOptimizer(provider, default_model="your-optimizer-model-id")
 ```python
 draft = "Write a code review for this python function."
 
-# 🚀 Optimize
+# Optimize your prompt draft
 optimized = optimizer.optimize(draft)
 print(optimized)
 ```
@@ -92,6 +92,7 @@ from rich.console import Console
 
 console = Console()
 
+# Evaluate the optimized prompt on one input compared to the draft prompt
 evaluator = PromptEvaluator(provider, optimizer.env, judge_model="your-judge-model-id")
 result = evaluator.evaluate(
     original_prompt=draft,
