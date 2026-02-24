@@ -5,6 +5,17 @@ import re
 from rich.table import Table
 import ast
 
+def _clean_verdict(raw: str) -> str:
+    # Strip markdown code fences
+    clean = re.sub(r'^```json\s*|```\s*$', '', raw.strip(), flags=re.MULTILINE)
+    # Escape unescaped control characters (newlines, tabs, etc.) inside JSON strings
+    clean = re.sub(
+        r'(?<=["\s])(\n|\r\n|\r|\t)(?=[^"]*")',
+        lambda m: m.group().encode('unicode_escape').decode(),
+        clean
+    )
+    return clean
+
 class EvaluationResult:
     def __init__(self, data: Dict):
         self.data = data
@@ -107,7 +118,7 @@ class PromptEvaluator:
 
         # 4. Get Judge Verdict
         raw_verdict = self.provider.complete([{"role": "user", "content": judge_content}], self.judge_model)
-        clean_verdict = re.sub(r'^```json\s*|```\s*$', '', raw_verdict.strip(), flags=re.MULTILINE)
+        clean_verdict = _clean_verdict(raw_verdict)
 
         try:
             verdict = json.loads(clean_verdict)
@@ -161,7 +172,7 @@ class BatchEvaluator:
             )
 
             raw_verdict = self.provider.complete([{"role": "user", "content": judge_query}], self.judge_model)
-            clean_verdict = re.sub(r'^```json\s*|```\s*$', '', raw_verdict.strip(), flags=re.MULTILINE)
+            clean_verdict = _clean_verdict(raw_verdict)
             
             try:
                 verdict = json.loads(clean_verdict)
