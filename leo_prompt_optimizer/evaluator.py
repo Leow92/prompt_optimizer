@@ -8,12 +8,14 @@ import ast
 def _clean_verdict(raw: str) -> str:
     # Strip markdown code fences
     clean = re.sub(r'^```json\s*|```\s*$', '', raw.strip(), flags=re.MULTILINE)
-    # Escape unescaped control characters (newlines, tabs, etc.) inside JSON strings
-    clean = re.sub(
-        r'(?<=["\s])(\n|\r\n|\r|\t)(?=[^"]*")',
-        lambda m: m.group().encode('unicode_escape').decode(),
-        clean
-    )
+    
+    # Replace all control characters inside JSON string values
+    def escape_string_content(match):
+        return match.group(0).replace('\n', '\\n').replace('\r', '\\r').replace('\t', '\\t')
+    
+    # Match any JSON string value (content between quotes, non-greedy)
+    clean = re.sub(r'"(?:[^"\\]|\\.)*"', escape_string_content, clean, flags=re.DOTALL)
+    
     return clean
 
 class EvaluationResult:

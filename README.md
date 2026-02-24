@@ -49,6 +49,18 @@ leo-prompt --prompt-file draft.txt \
 
 ---
 
+## 🤖 Supported Providers
+
+| Provider | Environment Variable |
+| --- | --- |
+| **Groq** | `GROQ_API_KEY` |
+| **OpenAI** | `OPENAI_API_KEY` |
+| **Anthropic** | `ANTHROPIC_API_KEY` |
+| **Gemini** | `GOOGLE_API_KEY` |
+| **Mistral** | `MISTRAL_API_KEY` |
+
+---
+
 ## 🔧 Python API Usage
 
 Perfect for integrating prompt optimization into your CI/CD pipelines or internal tools.
@@ -56,10 +68,10 @@ Perfect for integrating prompt optimization into your CI/CD pipelines or interna
 ### 1. Initialize Provider
 
 ```python
-from leo_prompt_optimizer import GroqProvider, LeoOptimizer, PromptEvaluator, BatchEvaluator
+from leo_prompt_optimizer import GeminiProvider, AnthropicProvider, OpenAIProvider, MistralProvider, GroqProvider, LeoOptimizer, PromptEvaluator, BatchEvaluator
 
 # Automatically loads API keys from .env (GROQ_API_KEY, OPENAI_API_KEY, etc.)
-provider = GroqProvider()
+provider = GroqProvider() # or another provider
 optimizer = LeoOptimizer(provider, default_model="your-optimizer-model-id")
 ```
 
@@ -114,9 +126,6 @@ batch_result = batch_evaluator.run_batch(
 console.print(batch_result.to_rich_table())
 ```
 
-![Batch Evaluation Result](https://raw.githubusercontent.com/Leow92/prompt_optimizer/main/assets/batch-evaluation-example.png)
-
-
 Example `tests.json` format for the CLI:
 ```json
 [
@@ -139,17 +148,6 @@ The library provides objective scores to replace subjective testing:
 | **Hallucination Risk** | Detects if the model is fabricating facts not present in the input. |
 | **Hallucination Accuracy** | Percentage of runs that were hallucination-free (e.g. 99.0% for 1 incident in 100 runs). |
 | **Total Runs** | Number of test cases evaluated, giving context to all other metrics. |
-
----
-
-## 🤖 Supported Providers
-
-| Provider | Environment Variable |
-| --- | --- |
-| **Groq** | `GROQ_API_KEY` |
-| **OpenAI** | `OPENAI_API_KEY` |
-| **Anthropic** | `ANTHROPIC_API_KEY` |
-| **Gemini** | `GOOGLE_API_KEY` |
 
 ---
 

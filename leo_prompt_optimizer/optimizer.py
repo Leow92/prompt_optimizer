@@ -91,6 +91,22 @@ class GeminiProvider(BaseProvider):
         )
         return response.text
 
+class MistralProvider(BaseProvider):
+    def __init__(self, api_key: Optional[str] = None):
+        self.api_key = api_key or os.getenv("MISTRAL_API_KEY")
+        if not self.api_key:
+            raise ValueError("❌ MISTRAL_API_KEY not found.")
+        
+        from mistralai import Mistral
+        self.client = Mistral(api_key=self.api_key)
+
+    def complete(self, messages, model):
+        response = self.client.chat.complete(
+            model=model,
+            messages=messages
+        )
+        return response.choices[0].message.content
+
 class LeoOptimizer:
     def __init__(self, provider: BaseProvider, default_model: str):
         self.provider = provider

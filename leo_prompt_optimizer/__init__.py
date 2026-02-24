@@ -13,7 +13,8 @@ from leo_prompt_optimizer.optimizer import (
     OpenAIProvider,
     GroqProvider,
     AnthropicProvider,
-    GeminiProvider
+    GeminiProvider,
+    MistralProvider
 )
 
 from leo_prompt_optimizer.evaluator import (
@@ -27,8 +28,9 @@ __all__ = [
     "GroqProvider",
     "AnthropicProvider",
     "GeminiProvider",
+    "MistralProvider",
     "PromptEvaluator",
     "BatchEvaluator"
 ]
 
-__version__ = "1.0.6"
+__version__ = "1.0.7"
