@@ -38,7 +38,7 @@ leo-prompt --prompt-file draft.txt \
            --model your-model-id
 ```
 
-![CLI Result](assets/cli-example.png)
+![CLI Result](https://raw.githubusercontent.com/Leow92/prompt_optimizer/main/assets/cli-example.png)
 
 
 ### What happens under the hood?
@@ -91,7 +91,7 @@ result = evaluator.evaluate(
 console.print(result.to_rich_table())
 ```
 
-![Single Evaluation Result](assets/single-evaluation-example.png)
+![Single Evaluation Result](https://raw.githubusercontent.com/Leow92/prompt_optimizer/main/assets/single-evaluation-example.png)
 
 
 ### 4. Evaluate on a Batch of Test Inputs
@@ -114,7 +114,7 @@ batch_result = batch_evaluator.run_batch(
 console.print(batch_result.to_rich_table())
 ```
 
-![Batch Evaluation Result](assets/batch-evaluation-example.png)
+![Batch Evaluation Result](https://raw.githubusercontent.com/Leow92/prompt_optimizer/main/assets/batch-evaluation-example.png)
 
 
 Example `tests.json` format for the CLI:
