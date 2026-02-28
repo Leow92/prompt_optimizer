@@ -71,8 +71,11 @@ Perfect for integrating prompt optimization into your CI/CD pipelines or interna
 from leo_prompt_optimizer import GeminiProvider, AnthropicProvider, OpenAIProvider, MistralProvider, GroqProvider, LeoOptimizer, PromptEvaluator, BatchEvaluator
 
 # Automatically loads API keys from .env (GROQ_API_KEY, OPENAI_API_KEY, etc.)
-provider = GroqProvider() # or another provider, you can specify your base_url is you have one as an argument
-optimizer = LeoOptimizer(provider, default_model="your-optimizer-model-id")
+provider = GroqProvider() # or another provider, you can specify your base_url for OpenAI is you have one as an argument
+optimizer = LeoOptimizer(
+    provider, 
+    default_model="your-optimizer-model-id"
+)
 ```
 
 ### 2. Optimize a Prompt
