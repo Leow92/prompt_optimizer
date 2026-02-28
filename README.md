@@ -38,7 +38,7 @@ leo-prompt --prompt-file draft.txt \
            --model your-model-id
 ```
 
-![CLI Result](https://raw.githubusercontent.com/Leow92/prompt_optimizer/main/assets/cli-example.png)
+![CLI Result](https://raw.githubusercontent.com/Leow92/prompt_optimizer/main/assets/cli-example.avif)
 
 
 ### What happens under the hood?
@@ -81,7 +81,13 @@ optimizer = LeoOptimizer(provider, default_model="your-optimizer-model-id")
 draft = "Write a code review for this python function."
 
 # Optimize your prompt draft
-optimized = optimizer.optimize(draft)
+optimized = optimizer.optimize(
+    draft, # Required - the prompt you want to optimize
+    user_input_example, # Optional - user input example
+    llm_output_example, # Optional - output wanted example
+    top_instruction, # Optional - high level instructions if more specific guidance is needed
+    model: Optional[str] = None,
+)
 print(optimized)
 ```
 

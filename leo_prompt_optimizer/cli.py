@@ -2,7 +2,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
-from .optimizer import LeoOptimizer, OpenAIProvider, GroqProvider, AnthropicProvider, GeminiProvider
+from .optimizer import LeoOptimizer, OpenAIProvider, GroqProvider, AnthropicProvider, GeminiProvider, MistralProvider
 from .evaluator import BatchEvaluator
 import os
 import json
@@ -49,7 +49,7 @@ def generate_diff_view(original: str, optimized: str):
 @app.command()
 def optimize(
     prompt_file: str = typer.Option(..., help="Path to text file containing prompt draft"),
-    provider_name: str = typer.Option("openai", help="Provider to use: 'openai' or 'groq'"), # Added this
+    provider_name: str = typer.Option("openai", help="Provider to use: 'openai', 'groq', 'gemini', 'anthropic' or 'mistral'"), # Added this
     tests: str = typer.Option(None, help="Path to JSON file with test cases"),
     model: str = typer.Option(None, help="Model override (e.g. 'llama3-70b-8192')"),
     output: str = "optimized_prompt.txt"
@@ -70,6 +70,9 @@ def optimize(
     elif provider_name.lower() == "anthropic":
         provider = AnthropicProvider()
         default_model = model or "claude-3-5-sonnet-20240620"
+    elif provider_name.lower() == "mistral":
+        provider = MistralProvider()
+        default_model = model or "mistral-medium-2508"
     elif provider_name.lower() == "gemini":
         provider = GeminiProvider()
         default_model = model or "gemini-3-flash-preview"
