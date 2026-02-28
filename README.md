@@ -86,7 +86,7 @@ optimized = optimizer.optimize(
     user_input_example, # Optional - user input example
     llm_output_example, # Optional - output wanted example
     top_instruction, # Optional - high level instructions if more specific guidance is needed
-    model: Optional[str] = None,
+    model, # Optional - specify the model you want to use
 )
 print(optimized)
 ```
